@@ -1,0 +1,89 @@
+-- View entire dataset
+
+SELECT *
+FROM NY.Crime;
+
+-- QUESTION 1: How many records are there in the dataset? 
+
+SELECT COUNT(*) AS Total_records
+FROM NY.Crime;
+
+-- QUESTION 2: What is the time range covered by the dataset (from the earliest to the latest arrest date)
+
+SELECT DISTINCT Arrest_date
+FROM NY.Crime;
+
+-- QUESTION 3: How many unique offense types are there in the dataset?
+
+SELECT DISTINCT Offense 
+FROM NY.Crime;
+
+-- QUESTION 4: What are the top 5 most common crimes in the dataset?
+
+SELECT COUNT(*) AS Offense_count, Offense
+FROM NY.Crime
+GROUP BY Offense 
+ORDER BY Offense_count DESC
+LIMIT 10;
+
+-- QUESTION 5: Can you provide a breakdown of offenses based on the level_of_offense?
+
+SELECT COUNT(*) AS Crime_count, level_of_offense AS Crime_Classification
+FROM NY.Crime
+WHERE Level_of_offense IS NOT NULL 
+GROUP BY Level_of_offense
+ORDER BY Crime_count DESC;
+
+-- QUESTION 6: How does the distribution of offenses vary across different boroughs?
+
+SELECT COUNT(*) AS Crime_count, Offense, Borough
+FROM NY.Crime
+GROUP BY Offense, Borough
+ORDER BY Crime_count DESC
+LIMIT 10;
+
+-- QUESTION 7: What is the distribution of arrests by age group?
+
+SELECT COUNT(*) AS Crime_count, Age_group
+FROM NY.Crime
+GROUP BY Age_group
+ORDER BY Crime_count DESC
+
+-- QUESTION 8: Is there any noticeable difference in the distribution of offenses based on sex?
+
+SELECT COUNT(*) AS Crime_count, Sex
+FROM NY.Crime
+GROUP BY Sex
+ORDER BY Crime_count DESC
+
+-- QUESTION 9: What is the racial composition of individuals involved in reported crimes?
+
+SELECT COUNT(*) AS Crime_count, Offense, Race
+FROM NY.Crime
+GROUP BY Offense, Race
+ORDER BY Crime_count DESC
+LIMIT 10;
+
+-- QUESTION 10: What is the highest offense by race?
+
+WITH RankedCrimes AS (
+    SELECT
+        Offense,
+        Race,
+        COUNT(*) AS CrimeCount,
+        RANK() OVER (PARTITION BY Race ORDER BY COUNT(*) DESC) AS CrimeRank
+    FROM
+        NY.Crime
+    GROUP BY
+        Race, Offense
+        ORDER BY CrimeCount DESC
+)
+
+SELECT
+    Offense,
+    Race,
+    CrimeCount
+FROM
+    RankedCrimes
+WHERE
+    CrimeRank = 1;
