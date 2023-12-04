@@ -87,3 +87,42 @@ FROM
     RankedCrimes
 WHERE
     CrimeRank = 1;
+
+
+-- QUESTION 11: Are there any noticeable trends or patterns in the number of arrests over time?
+
+SELECT
+    EXTRACT(MONTH FROM Arrest_date) AS ArrestMonth,
+    COUNT(*) AS ArrestCount
+FROM
+    NY.Crime
+GROUP BY
+    ArrestMonth
+ORDER BY
+    ArrestMonth;
+
+-- QUESTION 12: Can you identify the days of the week with the highest and lowest arrest rates?
+
+SELECT
+    EXTRACT(DAYOFWEEK FROM Arrest_date) AS DayOfWeek,
+    COUNT(*) AS ArrestCount
+FROM
+    NY.Crime
+GROUP BY
+    DayOfWeek
+ORDER BY
+    ArrestCount DESC;
+
+-- QUESTION 13: What are the most common crimes in a specific borough and age group?
+
+SELECT
+    Borough,
+    Age_group,
+    Offense,
+    COUNT(*) AS CrimeCount
+FROM
+    NY.Crime
+GROUP BY
+    Borough, Age_group, Offense
+ORDER BY
+    Borough, Age_group, CrimeCount DESC;
