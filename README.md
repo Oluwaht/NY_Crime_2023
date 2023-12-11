@@ -1,4 +1,4 @@
-# NY_Crime_2023
+# New York City Crime (2023)
 This is a breakdown of every arrest in NYC by the NYPD during the current year 2023.
 
 ## Overview
